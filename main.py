@@ -72,7 +72,7 @@ if __name__ == '__main__':
     comic_number = find_random_comic()
     caption = download_comic(filename, comic_number)
     api_url = 'https://api.vk.com/method/'
-    vk_token = os.getenv("ACCESS_TOKEN_VK")
+    vk_token = os.getenv('ACCESS_TOKEN_VK')
     group_id = os.getenv('GROUP_ID')
     api_version = '5.130'
     getting_address_payload = {
