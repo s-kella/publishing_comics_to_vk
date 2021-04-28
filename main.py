@@ -37,7 +37,7 @@ def get_address(payload, api_url):
     return upload_url
 
 
-def file_transfer(upload_url, filename):
+def send_file(upload_url, filename):
     with open(filename, 'rb') as photo:
         file = {
             'photo': photo
@@ -81,7 +81,7 @@ if __name__ == '__main__':
         'group_id': group_id
     }
     upload_url = get_address(getting_address_payload, api_url)
-    photo_json, server, hash = file_transfer(upload_url, filename)
+    photo_json, server, hash = send_file(upload_url, filename)
     saving_result_payload = {
         'group_id': group_id,
         'photo': photo_json,
