@@ -102,5 +102,4 @@ if __name__ == '__main__':
         'message': caption
     }
     post_id = post_comic(api_url, posting_payload)
-    print(f'Post number {post_id} published')
     os.remove(filename)
