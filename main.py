@@ -46,8 +46,8 @@ def send_file(upload_url, filename):
         response.raise_for_status()
         photo_json = response.json()['photo']
         server = response.json()['server']
-        hash = response.json()['hash']
-    return photo_json, server, hash
+        hash_param = response.json()['hash']
+    return photo_json, server, hash_param
 
 
 def save_the_result(api_url, payload):
@@ -81,12 +81,12 @@ if __name__ == '__main__':
         'group_id': group_id
     }
     upload_url = get_address(getting_address_payload, api_url)
-    photo_json, server, hash = send_file(upload_url, filename)
+    photo_json, server, hash_param = send_file(upload_url, filename)
     saving_result_payload = {
         'group_id': group_id,
         'photo': photo_json,
         'server': server,
-        'hash': hash,
+        'hash': hash_param,
         'access_token': vk_token,
         'v': api_version
     }
