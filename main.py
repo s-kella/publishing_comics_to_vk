@@ -72,37 +72,39 @@ def post_comic(api_url, payload):
 if __name__ == '__main__':
     load_dotenv()
     filename = 'comic.jpg'
-    comic_number = find_random_comic()
-    caption = download_comic(filename, comic_number)
-    api_url = 'https://api.vk.com/method/'
-    vk_token = os.getenv('ACCESS_TOKEN_VK')
-    group_id = os.getenv('GROUP_ID')
-    api_version = '5.130'
-    getting_address_payload = {
-        'access_token': vk_token,
-        'v': api_version,
-        'group_id': group_id
-    }
-    upload_url = get_address(getting_address_payload, api_url)
-    photo_json, server, hash_param = send_file(upload_url, filename)
-    saving_result_payload = {
-        'group_id': group_id,
-        'photo': photo_json,
-        'server': server,
-        'hash': hash_param,
-        'access_token': vk_token,
-        'v': api_version
-    }
-    media_id, owner_id_attachments = save_the_result(api_url, saving_result_payload)
-    owner_id = f'-{group_id}'
-    attachments = f'photo{owner_id_attachments}_{media_id}'
-    posting_payload = {
-        'from_group': True,
-        'attachments': attachments,
-        'owner_id': owner_id,
-        'access_token': vk_token,
-        'v': api_version,
-        'message': caption
-    }
-    post_id = post_comic(api_url, posting_payload)
-    os.remove(filename)
+    try:
+        comic_number = find_random_comic()
+        caption = download_comic(filename, comic_number)
+        api_url = 'https://api.vk.com/method/'
+        vk_token = os.getenv('ACCESS_TOKEN_VK')
+        group_id = os.getenv('GROUP_ID')
+        api_version = '5.130'
+        getting_address_payload = {
+            'access_token': vk_token,
+            'v': api_version,
+            'group_id': group_id
+        }
+        upload_url = get_address(getting_address_payload, api_url)
+        photo_json, server, hash_param = send_file(upload_url, filename)
+        saving_result_payload = {
+            'group_id': group_id,
+            'photo': photo_json,
+            'server': server,
+            'hash': hash_param,
+            'access_token': vk_token,
+            'v': api_version
+        }
+        media_id, owner_id_attachments = save_the_result(api_url, saving_result_payload)
+        owner_id = f'-{group_id}'
+        attachments = f'photo{owner_id_attachments}_{media_id}'
+        posting_payload = {
+            'from_group': True,
+            'attachments': attachments,
+            'owner_id': owner_id,
+            'access_token': vk_token,
+            'v': api_version,
+            'message': caption
+        }
+        post_id = post_comic(api_url, posting_payload)
+    finally:
+        os.remove(filename)
