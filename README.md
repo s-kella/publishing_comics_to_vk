@@ -11,7 +11,7 @@ GROUP_ID=''
 Создайте группу Вконтакте и вставьте её ID во вторую строчку .env файла. <br/>
 Создайте приложение Вконтакте на [странице для разработчиков](https://vk.com/apps?act=manage). Укажите тип ```standalone```. <br/>
 Cкопируйте цифры в адресной строке после id= <br/>
-Вставьте их вместо "CLIENT_ID".
+Вставьте их вместо "CLIENT_ID":
 ```
 https://oauth.vk.com/authorize?client_id=CLIENT_ID&scope=photos,groups,offline,wall&response_type=token
 ```
