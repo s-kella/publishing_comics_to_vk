@@ -24,8 +24,9 @@ def download_comic(filename, comic_number):
     comic_url = f'https://xkcd.com/{comic_number}/info.0.json'
     response = requests.get(comic_url)
     response.raise_for_status()
-    download_photo(response.json()['img'], filename)
-    caption = response.json()['alt']
+    response_json = response.json()
+    download_photo(response_json['img'], filename)
+    caption = response_json['alt']
     return caption
 
 
@@ -44,9 +45,10 @@ def send_file(upload_url, filename):
         }
         response = requests.post(upload_url, files=file)
         response.raise_for_status()
-        photo_json = response.json()['photo']
-        server = response.json()['server']
-        hash_param = response.json()['hash']
+        response_json = response.json()
+        photo_json = response_json['photo']
+        server = response_json['server']
+        hash_param = response_json['hash']
     return photo_json, server, hash_param
 
 
@@ -54,8 +56,9 @@ def save_the_result(api_url, payload):
     method = 'photos.saveWallPhoto'
     response = requests.post(api_url + method, params=payload)
     response.raise_for_status()
-    media_id = response.json()['response'][0]['id']
-    owner_id_attachments = response.json()['response'][0]['owner_id']
+    response_json = response.json()
+    media_id = response_json['response'][0]['id']
+    owner_id_attachments = response_json['response'][0]['owner_id']
     return media_id, owner_id_attachments
 
 
@@ -91,7 +94,7 @@ if __name__ == '__main__':
         'v': api_version
     }
     media_id, owner_id_attachments = save_the_result(api_url, saving_result_payload)
-    owner_id = '-'+group_id
+    owner_id = f'-{group_id}'
     attachments = f'photo{owner_id_attachments}_{media_id}'
     posting_payload = {
         'from_group': True,
