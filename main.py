@@ -4,6 +4,11 @@ import os
 import random
 
 
+def check_error(response):
+    if "error" in response:
+        return response['error']['error_msg']
+
+
 def download_photo(url, filename):
     response = requests.get(url)
     response.raise_for_status()
@@ -32,8 +37,11 @@ def download_comic(filename, comic_number):
 
 def get_address(payload, api_url):
     method = 'photos.getWallUploadServer'
-    response = requests.get(api_url + method, params=payload)
+    response = requests.get(f'{api_url}{method}', params=payload)
     response.raise_for_status()
+    error = check_error(response.json())
+    if error is not None:
+        raise requests.HTTPError(f'{error} in method {method}')
     upload_url = response.json()['response']['upload_url']
     return upload_url
 
@@ -54,9 +62,12 @@ def send_file(upload_url, filename):
 
 def save_the_result(api_url, payload):
     method = 'photos.saveWallPhoto'
-    response = requests.post(api_url + method, params=payload)
+    response = requests.post(f'{api_url}{method}', params=payload)
     response.raise_for_status()
     response_json = response.json()
+    error = check_error(response_json)
+    if error is not None:
+        raise requests.HTTPError(f'{error} in method {method}')
     media_id = response_json['response'][0]['id']
     owner_id_attachments = response_json['response'][0]['owner_id']
     return media_id, owner_id_attachments
@@ -64,8 +75,11 @@ def save_the_result(api_url, payload):
 
 def post_comic(api_url, payload):
     method = 'wall.post'
-    response = requests.post(api_url + method, params=payload)
+    response = requests.post(f'{api_url}{method}', params=payload)
     response.raise_for_status()
+    error = check_error(response.json())
+    if error is not None:
+        raise requests.HTTPError(f'{error} in method {method}')
     return response.json()['response']['post_id']
 
 
@@ -101,7 +115,7 @@ if __name__ == '__main__':
             'from_group': True,
             'attachments': attachments,
             'owner_id': owner_id,
-            'access_token': vk_token,
+            'access_token': vk_token + 'j',
             'v': api_version,
             'message': caption
         }
