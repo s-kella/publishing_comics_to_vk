@@ -115,7 +115,7 @@ if __name__ == '__main__':
             'from_group': True,
             'attachments': attachments,
             'owner_id': owner_id,
-            'access_token': vk_token + 'j',
+            'access_token': vk_token,
             'v': api_version,
             'message': caption
         }
