@@ -5,7 +5,7 @@ import random
 
 
 def check_error(response):
-    if "error" in response:
+    if 'error' in response:
         return response['error']['error_msg']
 
 
