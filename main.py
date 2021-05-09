@@ -52,11 +52,11 @@ def send_file(upload_url, filename):
             'photo': photo
         }
         response = requests.post(upload_url, files=file)
-        response.raise_for_status()
-        response_json = response.json()
-        photo_json = response_json['photo']
-        server = response_json['server']
-        hash_param = response_json['hash']
+    response.raise_for_status()
+    response_json = response.json()
+    photo_json = response_json['photo']
+    server = response_json['server']
+    hash_param = response_json['hash']
     return photo_json, server, hash_param
 
 
