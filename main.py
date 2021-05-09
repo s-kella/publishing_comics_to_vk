@@ -86,9 +86,9 @@ def post_comic(api_url, payload):
 if __name__ == '__main__':
     load_dotenv()
     filename = 'comic.jpg'
+    comic_number = find_random_comic()
+    caption = download_comic(filename, comic_number)
     try:
-        comic_number = find_random_comic()
-        caption = download_comic(filename, comic_number)
         api_url = 'https://api.vk.com/method/'
         vk_token = os.getenv('ACCESS_TOKEN_VK')
         group_id = os.getenv('GROUP_ID')
