@@ -53,6 +53,7 @@ def send_file(upload_url, filename):
         response = requests.post(upload_url, files=file)
     response.raise_for_status()
     response_data = response.json()
+    check_error(response_data, 'send_file')
     photo_json = response_data['photo']
     server = response_data['server']
     hash_param = response_data['hash']
