@@ -4,9 +4,9 @@ import os
 import random
 
 
-def check_error(response):
+def check_error(response, method):
     if 'error' in response:
-        return response['error']['error_msg']
+        raise requests.HTTPError(f'{response["error"]["error_msg"]} in method {method}')
 
 
 def download_photo(url, filename):
@@ -40,9 +40,7 @@ def get_address(payload, api_url):
     response = requests.get(f'{api_url}{method}', params=payload)
     response.raise_for_status()
     response_data = response.json()
-    error = check_error(response_data)
-    if error is not None:
-        raise requests.HTTPError(f'{error} in method {method}')
+    check_error(response_data, method)
     upload_url = response_data['response']['upload_url']
     return upload_url
 
@@ -66,9 +64,7 @@ def save_the_result(api_url, payload):
     response = requests.post(f'{api_url}{method}', params=payload)
     response.raise_for_status()
     response_data = response.json()
-    error = check_error(response_data)
-    if error is not None:
-        raise requests.HTTPError(f'{error} in method {method}')
+    check_error(response_data, method)
     media_id = response_data['response'][0]['id']
     owner_id_attachments = response_data['response'][0]['owner_id']
     return media_id, owner_id_attachments
@@ -79,9 +75,7 @@ def post_comic(api_url, payload):
     response = requests.post(f'{api_url}{method}', params=payload)
     response.raise_for_status()
     response_data = response.json()
-    error = check_error(response_data)
-    if error is not None:
-        raise requests.HTTPError(f'{error} in method {method}')
+    check_error(response_data, method)
     return response_data['response']['post_id']
 
 
