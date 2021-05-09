@@ -29,9 +29,9 @@ def download_comic(filename, comic_number):
     comic_url = f'https://xkcd.com/{comic_number}/info.0.json'
     response = requests.get(comic_url)
     response.raise_for_status()
-    response_json = response.json()
-    download_photo(response_json['img'], filename)
-    caption = response_json['alt']
+    response_data = response.json()
+    download_photo(response_data['img'], filename)
+    caption = response_data['alt']
     return caption
 
 
@@ -39,10 +39,11 @@ def get_address(payload, api_url):
     method = 'photos.getWallUploadServer'
     response = requests.get(f'{api_url}{method}', params=payload)
     response.raise_for_status()
-    error = check_error(response.json())
+    response_data = response.json()
+    error = check_error(response_data)
     if error is not None:
         raise requests.HTTPError(f'{error} in method {method}')
-    upload_url = response.json()['response']['upload_url']
+    upload_url = response_data['response']['upload_url']
     return upload_url
 
 
@@ -53,10 +54,10 @@ def send_file(upload_url, filename):
         }
         response = requests.post(upload_url, files=file)
     response.raise_for_status()
-    response_json = response.json()
-    photo_json = response_json['photo']
-    server = response_json['server']
-    hash_param = response_json['hash']
+    response_data = response.json()
+    photo_json = response_data['photo']
+    server = response_data['server']
+    hash_param = response_data['hash']
     return photo_json, server, hash_param
 
 
@@ -64,12 +65,12 @@ def save_the_result(api_url, payload):
     method = 'photos.saveWallPhoto'
     response = requests.post(f'{api_url}{method}', params=payload)
     response.raise_for_status()
-    response_json = response.json()
-    error = check_error(response_json)
+    response_data = response.json()
+    error = check_error(response_data)
     if error is not None:
         raise requests.HTTPError(f'{error} in method {method}')
-    media_id = response_json['response'][0]['id']
-    owner_id_attachments = response_json['response'][0]['owner_id']
+    media_id = response_data['response'][0]['id']
+    owner_id_attachments = response_data['response'][0]['owner_id']
     return media_id, owner_id_attachments
 
 
@@ -77,10 +78,11 @@ def post_comic(api_url, payload):
     method = 'wall.post'
     response = requests.post(f'{api_url}{method}', params=payload)
     response.raise_for_status()
-    error = check_error(response.json())
+    response_data = response.json()
+    error = check_error(response_data)
     if error is not None:
         raise requests.HTTPError(f'{error} in method {method}')
-    return response.json()['response']['post_id']
+    return response_data['response']['post_id']
 
 
 if __name__ == '__main__':
