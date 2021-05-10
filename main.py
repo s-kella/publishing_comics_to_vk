@@ -9,6 +9,11 @@ def check_error(response, method):
         raise requests.HTTPError(f'{response["error"]["error_msg"]} in method {method}')
 
 
+def check_is_empty(response, funk):
+    if response['photo'] == '[]':
+        raise requests.HTTPError(f'Parameter "photo" is empty in function {funk}')
+
+
 def download_photo(url, filename):
     response = requests.get(url)
     response.raise_for_status()
@@ -54,10 +59,11 @@ def send_file(upload_url, filename):
     response.raise_for_status()
     response_data = response.json()
     check_error(response_data, 'send_file')
-    photo_json = response_data['photo']
+    check_is_empty(response_data, 'send_file')
+    photo_data = response_data['photo']
     server = response_data['server']
     hash_param = response_data['hash']
-    return photo_json, server, hash_param
+    return photo_data, server, hash_param
 
 
 def save_the_result(api_url, payload):
@@ -96,10 +102,10 @@ if __name__ == '__main__':
             'group_id': group_id
         }
         upload_url = get_address(getting_address_payload, api_url)
-        photo_json, server, hash_param = send_file(upload_url, filename)
+        photo_data, server, hash_param = send_file(upload_url, filename)
         saving_result_payload = {
             'group_id': group_id,
-            'photo': photo_json,
+            'photo': photo_data,
             'server': server,
             'hash': hash_param,
             'access_token': vk_token,
