@@ -50,7 +50,7 @@ def get_address(payload, api_url):
     return upload_url
 
 
-def send_file(upload_url, filename):
+def upload_to_server(upload_url, filename):
     with open(filename, 'rb') as photo:
         file = {
             'photo': photo
@@ -102,7 +102,7 @@ if __name__ == '__main__':
             'group_id': group_id
         }
         upload_url = get_address(getting_address_payload, api_url)
-        photo_data, server, hash_param = send_file(upload_url, filename)
+        photo_data, server, hash_param = upload_to_server(upload_url, filename)
         saving_result_payload = {
             'group_id': group_id,
             'photo': photo_data,
